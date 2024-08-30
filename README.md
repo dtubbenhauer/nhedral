@@ -121,7 +121,43 @@ The notation is as in the paper *On Hecke and asymptotic categories for complex 
 
 # The Magma code
 
-To do
+We additionally need to check that certain graphs have eigenvalues being (multi)subsets of the roots of the Koornwinder polynomials. The 
+corresponding calculations can be found in the folder on this side. For example, in 2A3-c, the Magma code is:
+
+```
+M1:=Matrix(CyclotomicField(16),12,12,[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 
+1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 
+0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 
+0, 0, 0, 2, 0, 0, 0, 1, 0, 1, 0, 0, 
+0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 
+0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 
+0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 
+0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0]);
+
+M2:=Matrix(CyclotomicField(16),12,12,[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 2, 0, 0, 0, 1, 0, 1, 0, 0, 
+0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 1, 0, 
+0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 
+1, 1, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 
+0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 
+0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 
+0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 
+0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 
+0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0]);
+
+M3:=Transpose(M1);
+
+D,V:=Diagonalization([M1,M2,M3]);
+
+[[D[j][i][i] : j in [1..3]]: i in [1..12]]
+```
+One can plot the graphs by copying the adjacency matrices into, for example, <a href="https://graphonline.ru/en/">GraphOnline</a>. 
 
 # Erratum
 
