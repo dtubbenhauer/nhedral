@@ -1,7 +1,7 @@
 # Code and Erratum for *On Hecke and asymptotic categories for complex reflection groups*
 
 I collected a bit of SageMath and Magma code relevant for the paper *On Hecke and asymptotic categories for complex reflection groups*
-<a href="https://arxiv.org/abs/2307.03044">https://arxiv.org/abs/2307.03044</a> on this page.
+<a href="https://arxiv.org/abs/2409.01005">https://arxiv.org/abs/2409.01005</a> on this page.
 
 The code is in a **.sage** file or **.m** file, respectively, that can be downloaded from this site (or copied from below) and you can run it with SageMath or Magma.
 All files will run in the respective online calculators, see either here <a href="https://sagecell.sagemath.org/">SageMath</a> or 
