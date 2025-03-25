@@ -121,8 +121,8 @@ The notation is as in the paper *On Hecke and asymptotic categories for complex 
 
 # The Magma code
 
-We additionally need to check that certain graphs have eigenvalues being (multi)subsets of the roots of the Koornwinder polynomials. The 
-corresponding calculations can be found in the folder on this side. For example, in 2A3-c, the Magma code is:
+We additionally need to check that certain graphs have eigenvalues being (multi)subsets of the roots of the Chebyshev polynomials (so they are in the Koornwinder variety). The 
+corresponding calculations can be found in the folders on this side, ordered by the graph names. For example, in 2A3-c, the Magma code is:
 
 ```
 M1:=Matrix(CyclotomicField(16),12,12,[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
