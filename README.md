@@ -1,9 +1,10 @@
 # Code and Erratum for *On Hecke and asymptotic categories for complex reflection groups*
 
-I collected a bit of SageMath and Magma code relevant for the paper *On Hecke and asymptotic categories for complex reflection groups*
+I collected a bit of code relevant for the paper *On Hecke and asymptotic categories for complex reflection groups*
 <a href="https://arxiv.org/abs/2409.01005">https://arxiv.org/abs/2409.01005</a> on this page.
 
-The code is in a **.sage** file or **.m** file, respectively, that can be downloaded from this site (or copied from below) and you can run it with SageMath or Magma.
+We have **Python** code below that can be run online, e.g. in <a href="https://colab.research.google.com/">Colab</a>. The code is based on a **Mathematica** file that can be downloaded on this page.
+We also have a **.sage** file or **.m** file, respectively, that can be downloaded from this site (or copied from below) and you can run it with SageMath or Magma.
 All files will run in the respective online calculators, see either here <a href="https://sagecell.sagemath.org/">SageMath</a> or 
 <a href="http://magma.maths.usyd.edu.au/calc/">Magma</a>.
 
@@ -29,12 +30,89 @@ Their roots, the numbers $2\cos(e\pi/n)$, are everywhere in mathematics.
 
 The crucial observation is that this recursion matches the fusion (=tensor product) rule of $SL_2(\mathbb{C})$.
 An important construction due to Koornwinder for $SL_3(\mathbb{C})$, and Eier and Lidl in general, are certain polynomials, 
-the Koornwinder polynomials, that are attached to the fusion rules of, say, $SL_N(\mathbb{C})$. All the code below is about computing and illustrating the 
-roots of the Koornwinder polynomials.
+the higher Chebyshev polynomials, that are attached to the fusion rules of, say, $SL_N(\mathbb{C})$. All the code below is about computing and illustrating the 
+roots of the higher Chebyshev polynomials.
 
-# The SageMath code
+# The Python code: computing higher Chebyshev polynomials
 
-All roots of Koornwinder polynomials have their first coordinate in the interior of the N-cusped hypocycloid of parametric equation
+The following code computes the higher Chebyshev polynomials for $N=4$:
+
+```
+from functools import lru_cache
+from sympy import symbols, expand
+
+X1, X2, X3, X4 = symbols('X1 X2 X3 X4')
+
+# Memoization decorator to cache results
+@lru_cache(maxsize=None)
+def a(m1, m2, m3, m4):
+    # Base cases
+    if (m1, m2, m3, m4) == (0, 0, 0, 0):
+        return 1
+    if (m1, m2, m3, m4) == (1, 0, 0, 0):
+        return X1
+    if (m1, m2, m3, m4) == (0, 1, 0, 0):
+        return X2
+    if (m1, m2, m3, m4) == (0, 0, 1, 0):
+        return X3  # Note: Mathematica has this twice with X3 and X4, assuming X3 is correct
+    # Note: If you meant X4 for (0,0,1,0), replace X3 with X4 above
+
+    # If any index is negative, return 0
+    if m1 < 0 or m2 < 0 or m3 < 0 or m4 < 0:
+        return 0
+
+    # Find maximum of the indices
+    max_val = max(m1, m2, m3, m4)
+
+    # Case 1: m1 is the maximum
+    if m1 == max_val:
+        return (X1 * a(m1 - 1, m2, m3, m4) 
+                - a(m1 - 2, m2 + 1, m3, m4) 
+                - a(m1 - 1, m2 - 1, m3 + 1, m4) 
+                - a(m1 - 1, m2, m3 - 1, m4 + 1) 
+                - a(m1 - 1, m2, m3, m4 - 1))
+
+    # Case 2: m4 is the maximum
+    elif m4 == max_val:
+        return (X4 * a(m1, m2, m3, m4 - 1) 
+                - a(m1, m2, m3 + 1, m4 - 2) 
+                - a(m1, m2 + 1, m3 - 1, m4 - 1) 
+                - a(m1 + 1, m2 - 1, m3, m4 - 1) 
+                - a(m1 - 1, m2, m3, m4 - 1))
+
+    # Case 3: m2 is the maximum
+    elif m2 == max_val:
+        return (X2 * a(m1, m2 - 1, m3, m4) 
+                - a(m1 + 1, m2 - 2, m3 + 1, m4) 
+                - a(m1 - 1, m2 - 1, m3 + 1, m4) 
+                - a(m1 + 1, m2 - 1, m3 - 1, m4 + 1) 
+                - a(m1 + 1, m2 - 1, m3, m4 - 1) 
+                - a(m1 - 1, m2, m3 - 1, m4 + 1) 
+                - a(m1, m2 - 2, m3, m4 + 1) 
+                - a(m1 - 1, m2, m3, m4 - 1) 
+                - a(m1, m2 - 2, m3 + 1, m4 - 1) 
+                - a(m1, m2 - 1, m3 - 1, m4))
+
+    # Case 4: m3 is the maximum
+    else:  # m3 == max_val
+        return (X3 * a(m1, m2, m3 - 1, m4) 
+                - a(m1, m2 + 1, m3 - 2, m4 + 1) 
+                - a(m1, m2 + 1, m3 - 1, m4 - 1) 
+                - a(m1 + 1, m2 - 1, m3 - 1, m4 + 1) 
+                - a(m1 - 1, m2, m3 - 1, m4 + 1) 
+                - a(m1 + 1, m2 - 1, m3, m4 - 1) 
+                - a(m1 + 1, m2, m3 - 2, m4) 
+                - a(m1 - 1, m2, m3, m4 - 1) 
+                - a(m1 - 1, m2 + 1, m3 - 2, m4) 
+                - a(m1, m2 - 1, m3 - 1, m4))
+
+a(1, 1, 1, 1)
+```
+The result is a polynomial in four variables.
+
+# The SageMath code: plotting higher Chebyshev polynomials
+
+All roots of higher Chebyshev polynomials have their first coordinate in the interior of the N-cusped hypocycloid of parametric equation
 
 $$x(\theta)=(N-1)\cos(\theta)+\cos\big((N-1)\theta\big)\text{ and }y(\theta)=(N-1)\sin(\theta)-\sin\big((N-1)\theta\big).$$
 
@@ -119,7 +197,7 @@ print(KoornwinderTex(4,6))
 
 The notation is as in the paper *On Hecke and asymptotic categories for complex reflection groups*.
 
-# The Magma code
+# The Magma code: spectrum of graphs
 
 We additionally need to check that certain graphs have eigenvalues being (multi)subsets of the roots of the Chebyshev polynomials (so they are in the Koornwinder variety). The 
 corresponding calculations can be found in the folders on this side, ordered by the graph names. For example, in 2A3-c, the Magma code is:
