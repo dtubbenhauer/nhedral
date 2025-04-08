@@ -36,6 +36,4 @@ M2:=Matrix(CyclotomicField(60),16,16,[
 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0
 ]);
 
-M3:=Transpose(M1);
-
-D,V:=Diagonalization([M1,M2,Transpose(M1)]);
+check_matrices(M1,M2,M3,6);
