@@ -68,6 +68,4 @@ M2:=Matrix(CyclotomicField(96),32,32,[0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 
 M3:=Transpose(M1);
 
-D,V:=Diagonalization([M1,M2,M3]);
-
-[[D[j][i][i] : j in [1..3]]: i in [1..32]];
+check_matrices(M1,M2,M3,8);
