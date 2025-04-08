@@ -38,77 +38,20 @@ roots of the higher Chebyshev polynomials.
 The following code computes the higher Chebyshev polynomials for $N=4$:
 
 ```
-from functools import lru_cache
-from sympy import symbols, expand
-
-X1, X2, X3, X4 = symbols('X1 X2 X3 X4')
-
-# Memoization decorator to cache results
-@lru_cache(maxsize=None)
-def a(m1, m2, m3, m4):
-    # Base cases
-    if (m1, m2, m3, m4) == (0, 0, 0, 0):
-        return 1
-    if (m1, m2, m3, m4) == (1, 0, 0, 0):
-        return X1
-    if (m1, m2, m3, m4) == (0, 1, 0, 0):
-        return X2
-    if (m1, m2, m3, m4) == (0, 0, 1, 0):
-        return X3  # Note: Mathematica has this twice with X3 and X4, assuming X3 is correct
-    # Note: If you meant X4 for (0,0,1,0), replace X3 with X4 above
-
-    # If any index is negative, return 0
-    if m1 < 0 or m2 < 0 or m3 < 0 or m4 < 0:
-        return 0
-
-    # Find maximum of the indices
-    max_val = max(m1, m2, m3, m4)
-
-    # Case 1: m1 is the maximum
-    if m1 == max_val:
-        return (X1 * a(m1 - 1, m2, m3, m4) 
-                - a(m1 - 2, m2 + 1, m3, m4) 
-                - a(m1 - 1, m2 - 1, m3 + 1, m4) 
-                - a(m1 - 1, m2, m3 - 1, m4 + 1) 
-                - a(m1 - 1, m2, m3, m4 - 1))
-
-    # Case 2: m4 is the maximum
-    elif m4 == max_val:
-        return (X4 * a(m1, m2, m3, m4 - 1) 
-                - a(m1, m2, m3 + 1, m4 - 2) 
-                - a(m1, m2 + 1, m3 - 1, m4 - 1) 
-                - a(m1 + 1, m2 - 1, m3, m4 - 1) 
-                - a(m1 - 1, m2, m3, m4 - 1))
+from functools import lru_cache                                                                                                                                              from sympy import symbols, expand                                                                                                                                                                                                                                                                                                                         X1, X2, X3 = symbols('X1 X2 X3')                                                                                                                                                                                                                                                                                                                          # Memoization decorator to cache results                                                                                                                                     @lru_cache(maxsize=None)                                                                                                                                                     def a(m1, m2, m3):                                                                                                                                                               # Base cases                                                                                                                                                                 if (m1, m2, m3) == (0, 0, 0):                                                                                                                                                    return 1                                                                                                                                                                 if (m1, m2, m3) == (1, 0, 0):                                                                                                                                                    return X1                                                                                                                                                                if (m1, m2, m3) == (0, 1, 0):                                                                                                                                                    return X2                                                                                                                                                                if (m1, m2, m3) == (0, 0, 1):                                                                                                                                                    return X3                                                                                                                                                                                                                                                                                                                                             # If any index is negative, return 0                                                                                                                                         if m1 < 0 or m2 < 0 or m3 < 0:                                                                                                                                                   return 0                                                                                                                                                                                                                                                                                                                                              # Find maximum of the indices                                                                                                                                                max_val = max(m1, m2, m3)                                                                                                                                                                                                                                                                                                                                 # Case 1: m1 is the maximum                                                                                                                                                  if m1 == max_val:                                                                                                                                                                return (X1 * a(m1 - 1, m2, m3)                                                                                                                                                       - a(m1 - 2, m2 + 1, m3)                                                                                                                                                      - a(m1 - 1, m2 - 1, m3 + 1)                                                                                                                                                  - a(m1 - 1, m2, m3 - 1))                                                                                                                                                                                                                                                                                                                      # Case 2: m3 is the maximum                                                                                                                                                  elif m3 == max_val:                                                                                                                                                              return (X3 * a(m1, m2, m3 - 1)                                                                                                                                                       - a(m1, m2 + 1, m3 - 2)                                                                                                                                                      - a(m1 + 1, m2 - 1, m3 - 1)                                                                                                                                                  - a(m1 - 1, m2, m3 - 1)) 
 
     # Case 3: m2 is the maximum
     elif m2 == max_val:
-        return (X2 * a(m1, m2 - 1, m3, m4) 
-                - a(m1 + 1, m2 - 2, m3 + 1, m4) 
-                - a(m1 - 1, m2 - 1, m3 + 1, m4) 
-                - a(m1 + 1, m2 - 1, m3 - 1, m4 + 1) 
-                - a(m1 + 1, m2 - 1, m3, m4 - 1) 
-                - a(m1 - 1, m2, m3 - 1, m4 + 1) 
-                - a(m1, m2 - 2, m3, m4 + 1) 
-                - a(m1 - 1, m2, m3, m4 - 1) 
-                - a(m1, m2 - 2, m3 + 1, m4 - 1) 
-                - a(m1, m2 - 1, m3 - 1, m4))
+        return (X2 * a(m1, m2 - 1, m3)
+                - a(m1 + 1, m2 - 2, m3 + 1)
+                - a(m1 - 1, m2 - 1, m3 + 1)
+                - a(m1 + 1, m2 - 1, m3 - 1)
+                - a(m1 - 1, m2, m3 - 1)
+                - a(m1, m2 - 2, m3))
 
-    # Case 4: m3 is the maximum
-    else:  # m3 == max_val
-        return (X3 * a(m1, m2, m3 - 1, m4) 
-                - a(m1, m2 + 1, m3 - 2, m4 + 1) 
-                - a(m1, m2 + 1, m3 - 1, m4 - 1) 
-                - a(m1 + 1, m2 - 1, m3 - 1, m4 + 1) 
-                - a(m1 - 1, m2, m3 - 1, m4 + 1) 
-                - a(m1 + 1, m2 - 1, m3, m4 - 1) 
-                - a(m1 + 1, m2, m3 - 2, m4) 
-                - a(m1 - 1, m2, m3, m4 - 1) 
-                - a(m1 - 1, m2 + 1, m3 - 2, m4) 
-                - a(m1, m2 - 1, m3 - 1, m4))
-
-a(1, 1, 1, 1)
+a(1, 1, 1)
 ```
-The result is a polynomial in four variables.
+The result is a polynomial in three variables.
 
 # The SageMath code: plotting higher Chebyshev polynomials
 
@@ -199,8 +142,78 @@ The notation is as in the paper *On Hecke and asymptotic categories for complex 
 
 # The Magma code: spectrum of graphs
 
-We additionally need to check that certain graphs have eigenvalues being (multi)subsets of the roots of the Chebyshev polynomials (so they are in the Koornwinder variety). The 
-corresponding calculations can be found in the folders on this side, ordered by the graph names. For example, in 2A3-c, the Magma code is:
+We additionally need to check that certain graphs have eigenvalues being (multi)subsets of the roots of the Chebyshev polynomials (so they are in the Koornwinder variety). The corresponding calculations can be found in the folders on this side, ordered by the graph names. 
+
+The following MAGMA code check whether the joint spectrum of three commuting matrices is in the Koornwinder variety.
+
+```
+k<X1,X2,X3>:=PolynomialRing(Rationals(),3);
+
+//This function computes the Chebyshev polynomial for N=4
+
+function cheb(m1,m2,m3)
+  if [m1,m2,m3] eq [0,0,0] then
+    return 1;
+  elif [m1,m2,m3] eq [1,0,0] then
+    return X1;
+  elif [m1,m2,m3] eq [0,1,0] then
+    return X2;
+  elif [m1,m2,m3] eq [0,0,1] then
+    return X3;
+  end if;
+  if m1 lt 0 or m2 lt 0 or m3 lt 0 then
+    return 0;
+  end if;
+  max_val:=Maximum({m1,m2,m3});
+    if max_val eq m1 then
+      return X1*cheb(m1-1,m2,m3)-cheb(m1-2,m2+1,m3)-cheb(m1-1,m2-1,m3+1)-cheb(m1-1,m2,m3-1);
+    elif max_val eq m3 then
+      return X3*cheb(m1,m2,m3-1)-cheb(m1,m2+1,m3-2)-cheb(m1+1,m2-1,m3-1)-cheb(m1-1,m2,m3-1);
+    elif max_val eq m2 then
+      return X2*cheb(m1,m2-1,m3)-cheb(m1+1,m2-2,m3+1)-cheb(m1-1,m2-1,m3+1)-cheb(m1+1,m2-1,m3-1)-cheb(m1-1,m2,m3-1)-cheb(m1,m2-2,m3);
+  end if;
+end function;
+
+//Computes all the triples of positive integers with total sum k
+
+function tuples_level(k)
+  tuples := [];
+  for a in [0..k] do
+    for b in [0..k-a] do
+      c := k-a-b;
+      if c ge 0 then
+        Append(~tuples, [a, b, c]);
+      end if; 
+    end for;
+  end for;
+return tuples;
+end function;
+
+// Check whether a list of points in C^3 is in the Koornwinder variety
+
+function check_Koornwinder(eigenvalues,e)
+  tup:=tuples_level(e+1);
+  poly:=[cheb(i[1],i[2],i[3]) : i in tup];
+  for P in poly do
+    for eigen in eigenvalues do
+      if Evaluate(P,eigen) ne 0 then
+        return false;
+      end if;
+    end for;
+  end for;
+  return true;
+end function;
+
+// Check whether the joint spectrum of the three matrices is in the Koornwinder variety
+
+function check_matrices(M1,M2,M3,e)
+  D,V:=Diagonalization([M1,M2,M3]);
+  eigenvalues:=[[D[j][i][i] : j in [1..3]]: i in [1..NumberOfRows(M1)]];
+  return check_Koornwinder(eigenvalues,e);
+end function;
+```
+
+In 2A3-c case, we check that the joint spectrum is in the Koornwinder variety using the code:
 
 ```
 M1:=Matrix(CyclotomicField(16),12,12,[0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -231,9 +244,7 @@ M2:=Matrix(CyclotomicField(16),12,12,[0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
 
 M3:=Transpose(M1);
 
-D,V:=Diagonalization([M1,M2,M3]);
-
-[[D[j][i][i] : j in [1..3]]: i in [1..12]]
+check_matrices(M1,M2,M3,4);
 ```
 One can plot the graphs by copying the adjacency matrices into, for example, <a href="https://graphonline.ru/en/">GraphOnline</a>. 
 
