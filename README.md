@@ -38,8 +38,45 @@ roots of the higher Chebyshev polynomials.
 The following code computes the higher Chebyshev polynomials for $N=4$:
 
 ```
-from functools import lru_cache                                                                                                                                              from sympy import symbols, expand                                                                                                                                                                                                                                                                                                                         X1, X2, X3 = symbols('X1 X2 X3')                                                                                                                                                                                                                                                                                                                          # Memoization decorator to cache results                                                                                                                                     @lru_cache(maxsize=None)                                                                                                                                                     def a(m1, m2, m3):                                                                                                                                                               # Base cases                                                                                                                                                                 if (m1, m2, m3) == (0, 0, 0):                                                                                                                                                    return 1                                                                                                                                                                 if (m1, m2, m3) == (1, 0, 0):                                                                                                                                                    return X1                                                                                                                                                                if (m1, m2, m3) == (0, 1, 0):                                                                                                                                                    return X2                                                                                                                                                                if (m1, m2, m3) == (0, 0, 1):                                                                                                                                                    return X3                                                                                                                                                                                                                                                                                                                                             # If any index is negative, return 0                                                                                                                                         if m1 < 0 or m2 < 0 or m3 < 0:                                                                                                                                                   return 0                                                                                                                                                                                                                                                                                                                                              # Find maximum of the indices                                                                                                                                                max_val = max(m1, m2, m3)                                                                                                                                                                                                                                                                                                                                 # Case 1: m1 is the maximum                                                                                                                                                  if m1 == max_val:                                                                                                                                                                return (X1 * a(m1 - 1, m2, m3)                                                                                                                                                       - a(m1 - 2, m2 + 1, m3)                                                                                                                                                      - a(m1 - 1, m2 - 1, m3 + 1)                                                                                                                                                  - a(m1 - 1, m2, m3 - 1))                                                                                                                                                                                                                                                                                                                      # Case 2: m3 is the maximum                                                                                                                                                  elif m3 == max_val:                                                                                                                                                              return (X3 * a(m1, m2, m3 - 1)                                                                                                                                                       - a(m1, m2 + 1, m3 - 2)                                                                                                                                                      - a(m1 + 1, m2 - 1, m3 - 1)                                                                                                                                                  - a(m1 - 1, m2, m3 - 1)) 
+from functools import lru_cache
+from sympy import symbols, expand
 
+X1, X2, X3 = symbols('X1 X2 X3')
+
+# Memoization decorator to cache results
+@lru_cache(maxsize=None)
+def a(m1, m2, m3):
+    # Base cases
+    if (m1, m2, m3) == (0, 0, 0):
+        return 1
+    if (m1, m2, m3) == (1, 0, 0):
+        return X1
+    if (m1, m2, m3) == (0, 1, 0):
+        return X2
+    if (m1, m2, m3) == (0, 0, 1):
+        return X3
+    
+    # If any index is negative, return 0
+    if m1 < 0 or m2 < 0 or m3 < 0:
+        return 0
+    
+    # Find maximum of the indices
+    max_val = max(m1, m2, m3)
+    
+    # Case 1: m1 is the maximum
+    if m1 == max_val:
+        return (X1 * a(m1 - 1, m2, m3)
+                - a(m1 - 2, m2 + 1, m3)
+                - a(m1 - 1, m2 - 1, m3 + 1)
+                - a(m1 - 1, m2, m3 - 1))
+    
+    # Case 2: m3 is the maximum
+    elif m3 == max_val:
+        return (X3 * a(m1, m2, m3 - 1)
+                - a(m1, m2 + 1, m3 - 2)
+                - a(m1 + 1, m2 - 1, m3 - 1)
+                - a(m1 - 1, m2, m3 - 1))
+    
     # Case 3: m2 is the maximum
     elif m2 == max_val:
         return (X2 * a(m1, m2 - 1, m3)
